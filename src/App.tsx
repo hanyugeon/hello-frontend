@@ -1,5 +1,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Layout from "./components/Layout";
+import MyAnimal from "./routes/my-animal";
 import Main from "./routes/main";
 
 const App: FC = () => {
@@ -27,9 +29,12 @@ const App: FC = () => {
 
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Main account={account}/>} />
-      </Routes>
+      <Layout>
+        <Routes>
+          <Route path="/" element={<Main account={account}/>} />
+          <Route path="my-animal" element={<MyAnimal account={account}/>}/>
+        </Routes>
+      </Layout>
     </BrowserRouter>
   )
 };
