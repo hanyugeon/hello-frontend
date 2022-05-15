@@ -1,14 +1,14 @@
 import React, { FC, useState, useEffect } from 'react';
 import { Grid, Flex, Text, Button } from '@chakra-ui/react';
-import { mintAnimalTokenContract, saleAnimalTokenAddress } from '../web3Config';
-import AnimalCard from '../components/AnimalCard';
+import { mintAnimalTokenContract, saleAnimalTokenAddress, saleAnimalTokenContract } from '../web3Config';
+import MyAnimalCard, { IMyAnimalCard } from '../components/MyAnimalCard';
 
 interface MyAnimalProps {
   account: String;
 }
 
 const MyAnimal: FC<MyAnimalProps> = ({ account }) => {
-  const [animalCardArray, setAnimalCardArray] = useState<String[]>();
+  const [animalCardArray, setAnimalCardArray] = useState<IMyAnimalCard[]>();
   const [saleStatus, setSaleStatus] = useState<Boolean>(false);
 
   const getAnimalTokens = async() => {
@@ -27,8 +27,12 @@ const MyAnimal: FC<MyAnimalProps> = ({ account }) => {
         const animalType = await mintAnimalTokenContract.methods
           .animalTypes(animalTokenId)
           .call();
+        
+        const animalPrice = await saleAnimalTokenContract.methods
+          .animalTokenPrices(animalTokenId)
+          .call();
 
-        tempAnimalCardArray.push(animalType);
+        tempAnimalCardArray.push({ animalTokenId, animalType, animalPrice });
       }
 
       setAnimalCardArray(tempAnimalCardArray);
@@ -95,11 +99,19 @@ const MyAnimal: FC<MyAnimalProps> = ({ account }) => {
         </Button>
       </Flex>
       <Grid templateColumns="repeat(4, 1fr)" gap={8} mt={4}>
-        {
-          animalCardArray && animalCardArray.map((v, i) => {
-            return <AnimalCard key={i} animalType={v}/>
-          })
-        }
+        {animalCardArray &&
+          animalCardArray.map((v, i) => {
+            return (
+              <MyAnimalCard 
+                key={i} 
+                animalTokenId={v.animalTokenId} 
+                animalType={v.animalType} 
+                animalPrice={v.animalPrice} 
+                saleStatus={saleStatus} 
+                account={account}
+              />
+            );
+          })}
       </Grid>
     </>
     
