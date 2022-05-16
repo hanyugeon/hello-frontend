@@ -11,30 +11,31 @@ const MyAnimal: FC<MyAnimalProps> = ({ account }) => {
   const [animalCardArray, setAnimalCardArray] = useState<IMyAnimalCard[]>();
   const [saleStatus, setSaleStatus] = useState<Boolean>(false);
 
+  // 블록체인은 백엔드서버 보다 요청 및 응답속도가 느리기 떄문에 개선작업(리팩토링)이 필요.
   const getAnimalTokens = async() => {
     try {
       const balanceLength = await mintAnimalTokenContract.methods
         .balanceOf(account)
         .call();
 
-      const tempAnimalCardArray = [];
+      if (balanceLength === "0") return ;
 
-      for (let i = 0; i < parseInt(balanceLength, 10); i++) {
-        const animalTokenId = await mintAnimalTokenContract.methods
-          .tokenOfOwnerByIndex(account, i)
-          .call();
+      const tempAnimalCardArray: IMyAnimalCard[] = [];
 
-        const animalType = await mintAnimalTokenContract.methods
-          .animalTypes(animalTokenId)
-          .call();
-        
-        const animalPrice = await saleAnimalTokenContract.methods
-          .animalTokenPrices(animalTokenId)
-          .call();
+      const response = await mintAnimalTokenContract.methods
+        .getAnimalTokens(account)
+        .call();
 
-        tempAnimalCardArray.push({ animalTokenId, animalType, animalPrice });
-      }
+      response.map((v: IMyAnimalCard) => {
+        tempAnimalCardArray.push({
+          animalTokenId: v.animalTokenId,
+          animalType: v.animalType,
+          animalPrice: v.animalPrice,
+        });
+      });
 
+      console.log(tempAnimalCardArray);
+      
       setAnimalCardArray(tempAnimalCardArray);
     } catch (error) {
       console.error(error);
