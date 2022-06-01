@@ -616,6 +616,9 @@ export const saleAnimalTokenAddress = "0x5D1E5bBC728ccb8AEFB3965379D4caF0A9e2d60
 
 export const web3 = new Web3(window.ethereum);
 
+/** SmartContract 의 함수와 파라미터에 대한 MetaData를 정의해
+ * Contract의 객체를 만들 수 있고
+ * Contract의 함수를 호출할 수 있는 표준방법입니다.*/
 export const mintAnimalTokenContract = new web3.eth.Contract(
 	mintAnimalTokenAbi,
 	mintAnimalTokenAddress

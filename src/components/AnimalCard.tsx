@@ -2,7 +2,7 @@ import React, { FC } from 'react';
 import { Image } from '@chakra-ui/react';
 
 interface AnimalCardProps {
-  animalType: String;
+  animalType: string;
 }
 
 const AnimalCard: FC<AnimalCardProps> = ({ animalType }) => {

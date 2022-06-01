@@ -4,30 +4,31 @@ import { mintAnimalTokenContract } from '../web3Config';
 import AnimalCard from "../components/AnimalCard"
 
 interface MainProps {
-  account: String;
+  account: string;
 }
 
 const Main: FC<MainProps> = ({ account }) => {
-  const [newAnimalType, setNewAnimalType] = useState<String>();
+  const [newAnimalType, setNewAnimalType] = useState<string>();
 
   const onClickMint = async () => {
     try {
-      if (!account) return;
+      console.log(!account);
+      if (!account) return ;
 
       const response = await mintAnimalTokenContract.methods
         .mintAnimalToken()
         .send({ from: account });
 
+      console.log(response.status);
+      console.log(response);
       if (response.status) {
-        // blanceOf()에 address 넣어주기 
         const balanceLength = await mintAnimalTokenContract.methods
           .balanceOf(account)
-          .call()
+          .call();
 
-        // tokenOfOwnerByIndex는 remixIDE를 참고하면 2가지 인자를 받는다 (account 주소, index 값)
         const animalTokenID = await mintAnimalTokenContract.methods
           .tokenOfOwnerByIndex(account, parseInt(balanceLength, 10) - 1)
-          .call()
+          .call();
 
         const animalType = await mintAnimalTokenContract.methods
           .animalTypes(animalTokenID)

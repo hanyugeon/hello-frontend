@@ -4,7 +4,7 @@ import { mintAnimalTokenContract, saleAnimalTokenAddress, saleAnimalTokenContrac
 import MyAnimalCard, { IMyAnimalCard } from '../components/MyAnimalCard';
 
 interface MyAnimalProps {
-  account: String;
+  account: string;
 }
 
 const MyAnimal: FC<MyAnimalProps> = ({ account }) => {
@@ -25,6 +25,8 @@ const MyAnimal: FC<MyAnimalProps> = ({ account }) => {
       const response = await mintAnimalTokenContract.methods
         .getAnimalTokens(account)
         .call();
+
+      console.log(response);
 
       response.map((v: IMyAnimalCard) => {
         tempAnimalCardArray.push({

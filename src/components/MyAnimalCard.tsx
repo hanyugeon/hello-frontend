@@ -4,14 +4,14 @@ import AnimalCard from './AnimalCard';
 import { saleAnimalTokenContract, web3 } from "../web3Config";
 
 export interface IMyAnimalCard {
-  animalTokenId: String;
-  animalType: String;
+  animalTokenId: string;
+  animalType: string;
   animalPrice: string;
 }
 
 interface MyAnimalCardProps extends IMyAnimalCard {
   saleStatus: Boolean;
-  account: String;
+  account: string;
 }
 
 const MyAnimalCard: FC<MyAnimalCardProps> = ({
@@ -22,16 +22,18 @@ const MyAnimalCard: FC<MyAnimalCardProps> = ({
   account }) => {
     const [sellPrice, setSellPrice] = useState<string>("");
     const [myAnimalPrice, setMyAnimalPrice] = useState<string>(animalPrice);
+
     const onChangeSellPrice = (e: ChangeEvent<HTMLInputElement>) => {
       setSellPrice(e.target.value);
     }
+
     const onClickSell = async () => {
       try {
         if (!account || !saleStatus) return ;
 
         const response = await saleAnimalTokenContract.methods
           .setForSaleAnimalToken(
-            animalTokenId, 
+            animalTokenId,
             web3.utils.toWei(sellPrice, "ether")
           )
           .send({ from: account });

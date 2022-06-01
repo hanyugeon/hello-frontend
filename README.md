@@ -22,3 +22,15 @@
   - 판매상태 표시하기(Toggle)
   - 판매상태 및 가격표시 기능추가
   - 가격 등록 기능추가
+
+## 22.05.31
+
+- async와 await
+  - javascript의 비동기 처리 방식을 방지하기 위한 솔루션
+  - try ... catch문과 함께 활용된다.
+- try ... catch
+  - javascript에서는 에러가 발생하면 콘솔에 에러가 출력되고 코드는 멈춘다.
+  - try .. catch 문법을 사용하면 에러 상황을 잡고 에러 처리가 가능하다.
+  - (스크립트가 죽는걸 방지한다.)
+- TypeScript에서 string과 String은 서로 다르다...
+  - string: string, String: Object(객체)
