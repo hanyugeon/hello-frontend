@@ -1,33 +1,38 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { Box, Text, Flex, Button } from '@chakra-ui/react';
 import { mintAnimalTokenContract } from '../web3Config';
 import AnimalCard from "../components/AnimalCard"
+import { useWallet } from 'use-wallet';
 
-interface MainProps {
-  account: string;
-}
+const Main: FC = () => {
+  const wallet = useWallet();
 
-const Main: FC<MainProps> = ({ account }) => {
+  const [walletStatus, setWalletStatus] = useState<boolean>(false);
   const [newAnimalType, setNewAnimalType] = useState<string>();
+
+  const getWalletStatus = () => {
+    if (wallet.status === 'connected') {
+      setWalletStatus(true);
+    } else {
+      setWalletStatus(false);
+    }
+  }
 
   const onClickMint = async () => {
     try {
-      console.log(!account);
-      if (!account) return ;
+      if (!walletStatus) return ;
 
       const response = await mintAnimalTokenContract.methods
         .mintAnimalToken()
-        .send({ from: account });
+        .send({ from: wallet.account });
 
-      console.log(response.status);
-      console.log(response);
       if (response.status) {
         const balanceLength = await mintAnimalTokenContract.methods
-          .balanceOf(account)
+          .balanceOf(wallet.account)
           .call();
 
         const animalTokenID = await mintAnimalTokenContract.methods
-          .tokenOfOwnerByIndex(account, parseInt(balanceLength, 10) - 1)
+          .tokenOfOwnerByIndex(wallet.account, parseInt(balanceLength, 10) - 1)
           .call();
 
         const animalType = await mintAnimalTokenContract.methods
@@ -41,6 +46,11 @@ const Main: FC<MainProps> = ({ account }) => {
       console.error(error);
     }
   };
+
+  useEffect(() => {
+    getWalletStatus();
+    console.log(newAnimalType);
+  }, [wallet.status, newAnimalType]);
 
   return (
     <Flex 
@@ -58,6 +68,20 @@ const Main: FC<MainProps> = ({ account }) => {
         )}
       </Box>
       <Button mt={4} size="sm" colorScheme="blue" onClick={onClickMint}>Mint</Button>
+      <Text>
+        {wallet.status === 'connected' ? (
+          `${wallet.account}`
+        ) : (
+          "please install metamask wallet"
+        )}
+      </Text>
+      <Button onClick={walletStatus ? (
+          () => wallet.reset()
+        ) : (
+          () => wallet.connect()
+        )}>
+          {walletStatus ? 'disconnect' : 'Connect MetaMask Wallet'}
+      </Button>
     </Flex>
   )
 }

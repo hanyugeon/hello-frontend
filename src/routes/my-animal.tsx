@@ -1,15 +1,19 @@
 import React, { FC, useState, useEffect } from 'react';
 import { Grid, Flex, Text, Button } from '@chakra-ui/react';
-import { mintAnimalTokenContract, saleAnimalTokenAddress, saleAnimalTokenContract } from '../web3Config';
+import { mintAnimalTokenContract, saleAnimalTokenAddress } from '../web3Config';
 import MyAnimalCard, { IMyAnimalCard } from '../components/MyAnimalCard';
+import { useWallet } from 'use-wallet';
 
-interface MyAnimalProps {
-  account: string;
-}
+// interface MyAnimalProps {
+//   account: string | null;
+// }
 
-const MyAnimal: FC<MyAnimalProps> = ({ account }) => {
+const MyAnimal: FC = () => {
   const [animalCardArray, setAnimalCardArray] = useState<IMyAnimalCard[]>();
   const [saleStatus, setSaleStatus] = useState<Boolean>(false);
+
+  const wallet = useWallet();
+  const account = wallet.account;
 
   // 블록체인은 백엔드서버 보다 요청 및 응답속도가 느리기 떄문에 개선작업(리팩토링)이 필요.
   const getAnimalTokens = async() => {
@@ -82,11 +86,6 @@ const MyAnimal: FC<MyAnimalProps> = ({ account }) => {
     getIsApprovedForAll();
     getAnimalTokens();
   }, [account]);
-
-  // animalCardArray가 갱신되었을 때 console에 값 찍어줌
-  // useEffect(() => {
-  //   console.log(animalCardArray)
-  // }, [animalCardArray]);
 
   return (
     <>

@@ -11,7 +11,7 @@ export interface IMyAnimalCard {
 
 interface MyAnimalCardProps extends IMyAnimalCard {
   saleStatus: Boolean;
-  account: string;
+  account: string | null;
 }
 
 const MyAnimalCard: FC<MyAnimalCardProps> = ({
